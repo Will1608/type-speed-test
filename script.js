@@ -39,8 +39,7 @@ const getWordList = async () => {
 const fillEntireTextArea = async () => {
     let newLine = "";
     for (let i = 0; i < textAreaHeigth; i++){
-        newLine = await getNewTextAreaRow();
-        textArea.innerHTML += newLine + "<br>";
+        textArea.innerHTML += await getNewTextAreaRow();
     }
 }
 
