@@ -1,12 +1,34 @@
-const targetTextArea = document.getElementById('inputField');
-const textAreaWidth = targetTextArea.cols;
-const textAreaHeigth = targetTextArea.rows;
+const textArea = document.getElementById('displayField');
+
+const charPerLine = 100;
+const textAreaHeigth = 4;
 
 let wordList = null;
+let keyPressCount = 0;
 
 Array.prototype.random = function () {
     return this[Math.floor((Math.random()*this.length))];
 }
+
+const trackKeyPress = (event) => {
+
+    if(event.key === textArea.innerText[keyPressCount]){
+        textArea.children.item(keyPressCount).className = "correctLetter";
+        keyPressCount ++;
+    }
+    else if(event.key === "Backspace"){
+        if(keyPressCount != 0){
+            keyPressCount --;
+            textArea.children.item(keyPressCount).removeAttribute("class");
+
+        }
+    }
+    else{
+        textArea.children.item(keyPressCount).className = "incorrectLetter";
+        keyPressCount ++;
+    }
+
+};
 
 const getWordList = async () => {
     const response = await fetch('wordlist.txt');
@@ -15,12 +37,11 @@ const getWordList = async () => {
 }
 
 const fillEntireTextArea = async () => {
-    let textAreaContents = "";
+    let newLine = "";
     for (let i = 0; i < textAreaHeigth; i++){
-        textAreaContents += await getNewTextAreaRow();
+        newLine = await getNewTextAreaRow();
+        textArea.innerHTML += newLine + "<br>";
     }
-
-    targetTextArea.value = textAreaContents;
 }
 
 const getNewTextAreaRow = async () => {
@@ -32,13 +53,15 @@ const getNewTextAreaRow = async () => {
     let chosenWord = "";
     let i = 0;
 
-    while(i < textAreaWidth){
+    while(i < charPerLine){
         chosenWord =  wordList.random();
-        if(i + chosenWord.length + 1 < textAreaWidth){
-            textAreaRowRowValue += chosenWord + " ";
+        if(i + chosenWord.length + 1 < charPerLine){
+            for(let c of chosenWord){
+                textAreaRowRowValue += `<span>${c}</span>`
+            }
+            textAreaRowRowValue += `<span> </span>`
         }
         i += chosenWord.length + 1;
     }
-
     return textAreaRowRowValue;
 }

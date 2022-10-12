@@ -10,8 +10,10 @@
   </head>
 
   <body onload="fillEntireTextArea()">
-	<h1>Type Speed Test</h1>
-    <textarea readonly id="inputField" name="inputField" rows="5" cols="100"></textarea>
+
+	  <h1>Type Speed Test</h1>    
+    <div id="displayField" onkeydown="trackKeyPress(event)" tabindex="1"></div>
+
   </body>
 
   <script src="script.js"></script>
