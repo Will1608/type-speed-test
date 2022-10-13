@@ -17,23 +17,18 @@ const trackKeyPress = (event) => {
     if(event.key === textArea.innerText[keyPressCount]){
         console.log(event.key);
         textArea.children.item(keyPressCount).className = "correctLetter";
+        updateWordCount(event.key, textArea.innerText[keyPressCount]);
+
         keyPressCount ++;
 
-        if(event.key === " "){
-            wordCount ++;
-            updateWordCountDisplay();
-        }
     }
-    
+
     else if(event.key === "Backspace"){
         if(keyPressCount != 0){
             keyPressCount --;
             textArea.children.item(keyPressCount).removeAttribute("class");
 
-            if(textArea.innerText[keyPressCount] === " "){
-                wordCount --;
-                updateWordCountDisplay();
-            }
+            updateWordCount(event.key, textArea.innerText[keyPressCount]);
         }
     }
     else{
@@ -45,9 +40,20 @@ const trackKeyPress = (event) => {
 
 };
 
+const updateWordCount = (pressedKey, charAtPos) => {
+
+    if(charAtPos === " "){
+        if(pressedKey === "Backspace") wordCount --;
+        else wordCount ++;
+    }
+
+    updateWordCountDisplay();
+};
+
 const updateWordCountDisplay = () => {
     wordCountDisplay.innerText = `${wordCount}`;
 }; 
+
 const getWordList = async () => {
     const response = await fetch('wordlist.txt');
     const wordListAsString = await response.text();
