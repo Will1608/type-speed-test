@@ -81,6 +81,7 @@ const getNewTextAreaRow = async () => {
             for(let c of chosenWord){
                 textAreaRowRowValue += `<span>${c}</span>`
             }
+            textAreaRowRowValue += `<span> </span>`
         }
         i += chosenWord.length + 1;
     }
