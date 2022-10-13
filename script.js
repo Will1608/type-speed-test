@@ -1,7 +1,7 @@
 const textArea = document.getElementById('displayField');
 const wordCountDisplay = document.getElementById('wordCount');
 
-const charPerLine = 125;
+const charPerLine = 100;
 const textAreaHeigth = 4;
 
 let wordList = null;
