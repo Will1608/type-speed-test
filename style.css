@@ -1,9 +1,12 @@
 #displayField{
     font-family: monospace;
-    width: 60em;
+    font-size: x-large;
+    width: 27em;
     height: 4em;
     border: solid;
     padding: 1em;
+    margin: 1em auto;
+
 }
 
 .correctLetter {

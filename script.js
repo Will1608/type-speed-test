@@ -1,12 +1,14 @@
 const textArea = document.getElementById('displayField');
 const wordCountDisplay = document.getElementById('wordCount');
 
-const charPerLine = 100;
-const textAreaHeigth = 4;
+const wordsPerLine = 6;
+const displayLineCount = 4;
 
 let wordList = null;
 let keyPressCount = 0;
 let wordCount = 0;
+
+let linesToDisplay = [];
 
 Array.prototype.random = function () {
     return this[Math.floor((Math.random()*this.length))];
@@ -31,59 +33,44 @@ const trackKeyPress = (event) => {
             updateWordCount(event.key, textArea.innerText[keyPressCount]);
         }
     }
+
     else{
         textArea.children.item(keyPressCount).className = "incorrectLetter";
         keyPressCount ++;
     }
-    
-
-
 };
-
-const updateWordCount = (pressedKey, charAtPos) => {
-
-    if(charAtPos === " "){
-        if(pressedKey === "Backspace") wordCount --;
-        else wordCount ++;
-    }
-
-    updateWordCountDisplay();
-};
-
-const updateWordCountDisplay = () => {
-    wordCountDisplay.innerText = `${wordCount}`;
-}; 
 
 const getWordList = async () => {
-    const response = await fetch('wordlist.txt');
-    const wordListAsString = await response.text();
-    return wordListAsString.split('\n');
-}
-
-const fillEntireTextArea = async () => {
-    for (let i = 0; i < textAreaHeigth; i++){
-        textArea.innerHTML += await getNewTextAreaRow();
-    }
-}
-
-const getNewTextAreaRow = async () => {
     if(wordList === null){
-        wordList = await getWordList();
+        const response = await fetch('wordlist.txt');
+        const wordListAsString = await response.text();
+        wordList = wordListAsString.split('\n');
     }
 
-    let textAreaRowRowValue = "";
-    let chosenWord = "";
-    let i = 0;
+    return wordList;
+}
 
-    while(i < charPerLine){
-        chosenWord =  wordList.random();
-        if(i + chosenWord.length + 1 < charPerLine){
-            for(let c of chosenWord){
-                textAreaRowRowValue += `<span>${c}</span>`
-            }
-            textAreaRowRowValue += `<span> </span>`
-        }
-        i += chosenWord.length + 1;
+const getNewLine = async () => {
+
+    wordList = await getWordList();
+    let newLine = [];
+
+    for(let i = 0; i < wordsPerLine; i++){
+        newLine.push(chosenWord =  wordList.random());
     }
-    return textAreaRowRowValue;
+
+    return newLine;
+}
+
+const updateLinesToDisplay = async () => {
+    while(linesToDisplay.length < 4){
+        linesToDisplay.push(await getNewLine());
+    }
+
+    displayLines();
+};
+
+const displayLines = () => {
+    
+    textArea.innerHTML = linesToDisplay.map(line => line.map(word => `<span>${word} </span>`).join(" ")).join("</br>");
 }
