@@ -9,7 +9,7 @@ const displayLineCount = 4;
 let wordList = null;
 let linesToDisplay = [];
 
-let remainingSeconds = 10;
+let remainingSeconds = 60;
 let timer = null;
 
 let istestRunning = false;
@@ -23,7 +23,7 @@ Array.prototype.random = function () {
 }
 
 const trackKeyPress = (event) => {
-    if(remainingSeconds === 10 && !istestRunning && !isTestFinished){
+    if(remainingSeconds === 60 && !istestRunning && !isTestFinished){
         timer = setInterval(startTimer, 1000);
         istestRunning = true;
     }
