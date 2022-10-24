@@ -1,44 +1,59 @@
 const textArea = document.getElementById('displayField');
+const minutesField = document.getElementById('minutes');
+const secondsField = document.getElementById('seconds');
 const wordCountDisplay = document.getElementById('wordCount');
 
-const wordsPerLine = 6;
+const charsPerLine = 38;
 const displayLineCount = 4;
 
 let wordList = null;
-let keyPressCount = 0;
-let wordCount = 0;
-
 let linesToDisplay = [];
+
+let remainingSeconds = 60;
+let timer = null;
+
+let testRunning = true;
+let keyPressCount = 0;
+let typedChars = [];
 
 Array.prototype.random = function () {
     return this[Math.floor((Math.random()*this.length))];
 }
 
 const trackKeyPress = (event) => {
-    
-    if(event.key === textArea.innerText[keyPressCount]){
-        console.log(event.key);
-        textArea.children.item(keyPressCount).className = "correctLetter";
-        updateWordCount(event.key, textArea.innerText[keyPressCount]);
-
-        keyPressCount ++;
-
-    }
-
-    else if(event.key === "Backspace"){
-        if(keyPressCount != 0){
-            keyPressCount --;
-            textArea.children.item(keyPressCount).removeAttribute("class");
-
-            updateWordCount(event.key, textArea.innerText[keyPressCount]);
+    if(testRunning){
+        if(remainingSeconds == 60){
+            timer = setInterval(startTimer, 1000);
         }
+        if(event.key === "Backspace"){
+            if(keyPressCount > 0){
+                typedChars.pop();
+                textArea.children.item(keyPressCount - 1).className = "";
+            }
+        }
+        else{
+            typedChars.push(event.key);
+            textArea.children.item(keyPressCount).className = getLetterClass(textArea.innerText[keyPressCount], typedChars[keyPressCount]);
+        }
+        keyPressCount = typedChars.length;
+    }
+}
+
+const getLetterClass = (expected, actual) => {
+    return expected===actual? "correctLetter" : "incorrectLetter";
+}
+
+const startTimer = () => {
+    remainingSeconds--;
+    minutesField.innerText = 0;
+    secondsField.innerText = remainingSeconds;
+    if(remainingSeconds == 0){
+        clearInterval(timer);
+        testRunning = false;
+        console.log(typedChars);
     }
 
-    else{
-        textArea.children.item(keyPressCount).className = "incorrectLetter";
-        keyPressCount ++;
-    }
-};
+}
 
 const getWordList = async () => {
     if(wordList === null){
@@ -54,9 +69,15 @@ const getNewLine = async () => {
 
     wordList = await getWordList();
     let newLine = [];
+    let charOnLine = 0;
 
-    for(let i = 0; i < wordsPerLine; i++){
-        newLine.push(chosenWord =  wordList.random());
+    while(charOnLine < charsPerLine){
+        chosenWord =  wordList.random();
+
+        if((charOnLine + chosenWord.length) < charsPerLine){
+            newLine.push(chosenWord);
+        }
+        charOnLine += chosenWord.length;
     }
 
     return newLine;
@@ -71,6 +92,8 @@ const updateLinesToDisplay = async () => {
 };
 
 const displayLines = () => {
-    
-    textArea.innerHTML = linesToDisplay.map(line => line.map(word => `<span>${word} </span>`).join(" ")).join("</br>");
+    textArea.innerHTML = linesToDisplay.map(line => 
+                                            line.map(word => 
+                                                     word.split("").map(letter =>
+                                                                        `<span>${letter}</span>`).join("")).join("<span> </span>")).join("<span> </span>");
 }

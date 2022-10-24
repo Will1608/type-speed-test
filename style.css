@@ -1,11 +1,11 @@
 #displayField{
     font-family: monospace;
     font-size: x-large;
-    width: 27em;
-    height: 4em;
+    width: 28em;
+    height: 5em;
     border: solid;
-    padding: 1em;
     margin: 1em auto;
+    padding: 1em 1em 1em 2em;
 
 }
 
