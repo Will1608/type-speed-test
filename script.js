@@ -9,10 +9,12 @@ const displayLineCount = 4;
 let wordList = null;
 let linesToDisplay = [];
 
-let remainingSeconds = 60;
+let remainingSeconds = 10;
 let timer = null;
 
-let testRunning = false;
+let istestRunning = false;
+let isTestFinished = false;
+
 let keyPressCount = 0;
 let typedChars = [];
 
@@ -21,11 +23,11 @@ Array.prototype.random = function () {
 }
 
 const trackKeyPress = (event) => {
-    if(remainingSeconds === 60 && !testRunning){
+    if(remainingSeconds === 10 && !istestRunning && !isTestFinished){
         timer = setInterval(startTimer, 1000);
-        testRunning = true;
+        istestRunning = true;
     }
-    if(testRunning){
+    if(istestRunning){
 
         if(event.key === "Backspace"){
             if(keyPressCount > 0){
@@ -51,10 +53,10 @@ const startTimer = () => {
     secondsField.innerText = remainingSeconds;
     if(remainingSeconds == 0){
         clearInterval(timer);
-        testRunning = false;
+        istestRunning = false;
+        isTestFinished = false;
         console.log(typedChars);
     }
-
 }
 
 const getWordList = async () => {
