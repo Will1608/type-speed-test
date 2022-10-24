@@ -12,7 +12,7 @@ let linesToDisplay = [];
 let remainingSeconds = 60;
 let timer = null;
 
-let testRunning = true;
+let testRunning = false;
 let keyPressCount = 0;
 let typedChars = [];
 
@@ -21,10 +21,12 @@ Array.prototype.random = function () {
 }
 
 const trackKeyPress = (event) => {
+    if(remainingSeconds === 60 && !testRunning){
+        timer = setInterval(startTimer, 1000);
+        testRunning = true;
+    }
     if(testRunning){
-        if(remainingSeconds == 60){
-            timer = setInterval(startTimer, 1000);
-        }
+
         if(event.key === "Backspace"){
             if(keyPressCount > 0){
                 typedChars.pop();
