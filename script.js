@@ -28,17 +28,18 @@ const trackKeyPress = (event) => {
         istestRunning = true;
     }
     if(istestRunning){
-
-        if(event.key === "Backspace"){
-            if(keyPressCount > 0){
-                typedChars.pop();
-                textArea.children.item(keyPressCount - 1).className = "";
+        if(!(event.key === "Shift" || event.key === "CapsLock")){
+            if(event.key === "Backspace"){
+                if(keyPressCount > 0){
+                    typedChars.pop();
+                    textArea.children.item(keyPressCount - 1).className = "";
+                }
             }
-        }
-        else{
-            typedChars.push(event.key);
-            textArea.children.item(keyPressCount).className = getLetterClass(textArea.innerText[keyPressCount], typedChars[keyPressCount]);
-        }
+            else{
+                typedChars.push(event.key);
+                textArea.children.item(keyPressCount).className = getLetterClass(textArea.innerText[keyPressCount], typedChars[keyPressCount]);
+            }
+        }       
         keyPressCount = typedChars.length;
     }
 }
